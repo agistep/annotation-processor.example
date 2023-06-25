@@ -1,0 +1,34 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    targetCompatibility = 1.8
+    sourceCompatibility = 1.8
+}
+
+dependencies {
+
+    api project(':fake-lombok')
+    annotationProcessor project(':fake-lombok')
+
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs += ['src/main/java']
+            srcDirs += ['build/classes/java/main']
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    doFirst {
+        println( "Annotation processor path: ${options.annotationProcessorPath.getFiles()}" )
+    }
+}

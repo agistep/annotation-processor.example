@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/fake-lombok/understanding-java-annotation-processor.fake-lombok.main.iml" filepath="$PROJECT_DIR$/.idea/modules/fake-lombok/understanding-java-annotation-processor.fake-lombok.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/fake-lombok/understanding-java-annotation-processor.fake-lombok.test.iml" filepath="$PROJECT_DIR$/.idea/modules/fake-lombok/understanding-java-annotation-processor.fake-lombok.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/foo-client/understanding-java-annotation-processor.foo-client.main.iml" filepath="$PROJECT_DIR$/.idea/modules/foo-client/understanding-java-annotation-processor.foo-client.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/foo-client/understanding-java-annotation-processor.foo-client.test.iml" filepath="$PROJECT_DIR$/.idea/modules/foo-client/understanding-java-annotation-processor.foo-client.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/understanding-java-annotation-processor.main.iml" filepath="$PROJECT_DIR$/.idea/modules/understanding-java-annotation-processor.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/understanding-java-annotation-processor.test.iml" filepath="$PROJECT_DIR$/.idea/modules/understanding-java-annotation-processor.test.iml" />
+    </modules>
+  </component>
+</project>

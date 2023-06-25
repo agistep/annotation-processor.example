@@ -1,0 +1,39 @@
+plugins {
+    id('java-library')
+
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+dependencies {
+//    implementation 'com.squareup:javapoet:1.11.1'
+    implementation 'org.apache.commons:commons-lang3:3.9'
+
+    implementation 'com.google.auto.service:auto-service:1.0.1'
+    annotationProcessor 'com.google.auto.service:auto-service-annotations:1.0.1'
+    implementation files("/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home/lib/tools.jar")
+//    implementation files("../lib/tools-1.6.0.jar")
+//    api 'org.projectlombok:lombok:1.14.8'
+    // https://mvnrepository.com/artifact/jdk.tools/jdk.tools
+
+
+}
+
+compileJava {
+    options.annotationProcessorPath = configurations.annotationProcessor
+}
+//
+//tasks.withType(JavaCompile)
+//        .configureEach {
+//    options.compilerArgs += ["--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"]
+//    options.compilerArgs += ["--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED"]
+//    options.compilerArgs += ["--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED"]
+//    options.compilerArgs += ["--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED"]
+//}
