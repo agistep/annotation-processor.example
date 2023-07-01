@@ -3,19 +3,22 @@
   <component name="CompilerConfiguration">
     <option name="USE_RELEASE_OPTION" value="false" />
     <annotationProcessing>
-      <profile default="true" name="Default" enabled="true" />
+      <profile default="true" name="Default" enabled="true">
+        <sourceOutputDir name="build" />
+        <processorPath useClasspath="false" useProcessorModulePath="true">
+          <entry name="$PROJECT_DIR$/fake-lombok" />
+        </processorPath>
+      </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$PROJECT_DIR$/fake-lombok/build/libs/fake-lombok.jar" />
-          <entry name="/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home/lib/tools.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.9/122c7cee69b53ed4a7681c03d4ee4c0e2765da5/commons-lang3-3.9.jar" />
         </processorPath>
         <module name="understanding-java-annotation-processor.foo-client.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8">
-      <module name="understanding-java-annotation-processor.foo-client.generated" target="1.8" />
       <module name="understanding-java-annotation-processor.main" target="11" />
       <module name="understanding-java-annotation-processor.test" target="11" />
     </bytecodeTargetLevel>

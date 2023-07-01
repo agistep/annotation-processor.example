@@ -27,7 +27,7 @@ import java.util.Set;
  * SupportedSourceVersion jdk 지원 정보
  */
 @SupportedAnnotationTypes("com.likelen.annotation.Getter")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 public class GetProcessor extends AbstractProcessor {
     private ProcessingEnvironment processingEnvironment;
     private Trees trees;

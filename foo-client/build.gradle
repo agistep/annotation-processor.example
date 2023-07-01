@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'idea'
 }
 
 repositories {
@@ -7,8 +8,8 @@ repositories {
 }
 
 java {
-    targetCompatibility = 1.8
-    sourceCompatibility = 1.8
+    targetCompatibility = 11
+    sourceCompatibility = 11
 }
 
 dependencies {
@@ -16,16 +17,6 @@ dependencies {
     api project(':fake-lombok')
     annotationProcessor project(':fake-lombok')
 
-}
-
-sourceSets {
-
-    main {
-        java {
-            srcDirs += ['src/main/java']
-            srcDirs += ['build/classes/java/main']
-        }
-    }
 }
 
 tasks.withType(JavaCompile) {
