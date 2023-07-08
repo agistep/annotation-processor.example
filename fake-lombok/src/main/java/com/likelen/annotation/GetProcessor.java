@@ -11,6 +11,7 @@ import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.tree.TreeTranslator;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 
 import javax.annotation.processing.*;
@@ -62,40 +63,6 @@ public class GetProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         System.out.println("process 메서드 실행");
         // TreePathScanner 모든 하위 트리노드를 방문하고, 상위 노드에 대한 경로를 유지하는 tree visitor
-        TreePathScanner<Object, CompilationUnitTree> scanner = new TreePathScanner<Object, CompilationUnitTree>() {
-            /**
-             * CompillationUnitTree 는 소스파일에서 패키지 선언에서 부터 abstract syntax tree 를 정의함
-             * ClassTree -> 클래스 , 인터페이스, enum 어노테이션을 트리노드로 선언
-             * class 정의 위에 어노테이션 작성시 내부적으로 메소드 실행
-             * CompilationUnitTree AST(Abstract Syntax Tree 의 최상단)
-             */
-            @Override
-            public Trees visitClass(ClassTree classTree, CompilationUnitTree unitTree) {
-                JCTree.JCCompilationUnit compilationUnit = (JCTree.JCCompilationUnit) unitTree;
-                // .java 파일인지 확인후 accept 를 통해 treeTranslater, 작성 메소드 생성
-                if (compilationUnit.sourcefile.getKind() == JavaFileObject.Kind.SOURCE) {
-                    compilationUnit.accept(new TreeTranslator() {
-                        @Override
-                        public void visitClassDef(JCTree.JCClassDecl jcClassDecl) {
-                            super.visitClassDef(jcClassDecl);
-                            // Class 내부에 정의된 모든 member 를 싹다 가져옴.
-                            List<JCTree> members = jcClassDecl.getMembers();
-                            // Syntax tree 에서 모든 member 변수 get
-                            for (JCTree member : members) {
-                                if (member instanceof JCTree.JCVariableDecl) {
-                                    // member 변수에 대한 getter 메서드 생성
-                                    List<JCTree.JCMethodDecl> getters = createGetter((JCTree.JCVariableDecl) member);
-                                    for (JCTree.JCMethodDecl getter : getters) {
-                                        jcClassDecl.defs = jcClassDecl.defs.prepend(getter);
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-                return trees;
-            }
-        };
         /***
          * RoundEnvironment
          * getElementsAnnotatedWith() -> @Get 의 어노테이션이 붙여져 있는 모든 element 를 불러 일으킨다.
@@ -114,10 +81,82 @@ public class GetProcessor extends AbstractProcessor {
         return true;
     }
 
+    TreePathScanner<Object, CompilationUnitTree> scanner = new TreePathScanner<Object, CompilationUnitTree>() {
+        /**
+         * CompillationUnitTree 는 소스파일에서 패키지 선언에서 부터 abstract syntax tree 를 정의함
+         * ClassTree -> 클래스 , 인터페이스, enum 어노테이션을 트리노드로 선언
+         * class 정의 위에 어노테이션 작성시 내부적으로 메소드 실행
+         * CompilationUnitTree AST(Abstract Syntax Tree 의 최상단)
+         */
+        @Override
+        public Trees visitClass(ClassTree classTree, CompilationUnitTree unitTree) {
+            JCTree.JCCompilationUnit compilationUnit = (JCTree.JCCompilationUnit) unitTree;
+            // .java 파일인지 확인후 accept 를 통해 treeTranslater, 작성 메소드 생성
+            if (compilationUnit.sourcefile.getKind() == JavaFileObject.Kind.SOURCE) {
+                compilationUnit.accept(new TreeTranslator() {
+                    @Override
+                    public void visitClassDef(JCTree.JCClassDecl jcClassDecl) {
+                        super.visitClassDef(jcClassDecl);
+                        // Class 내부에 정의된 모든 member 를 싹다 가져옴.
+                        List<JCTree> members = jcClassDecl.getMembers();
+                        // Syntax tree 에서 모든 member 변수 get
+                        for (JCTree member : members) {
+//                            if (member instanceof JCTree.JCVariableDecl) {
+//                                // member 변수에 대한 getter 메서드 생성
+//                                List<JCTree.JCMethodDecl> getters = createGetter((JCTree.JCVariableDecl) member);
+//                                for (JCTree.JCMethodDecl getter : getters) {
+//                                    jcClassDecl.defs = jcClassDecl.defs.prepend(getter);
+//                                }
+//                            }
+
+                            if (member instanceof JCTree.JCMethodDecl) {
+                                JCTree.JCMethodDecl member2 = (JCTree.JCMethodDecl) member;
+                                if (member2.getName().toString().startsWith("<init>")) {
+                                    // member 변수에 대한 getter 메서드 생성
+
+                                    JCTree.JCExpression systemOut = treeMaker.Select(
+                                            treeMaker.Ident(names.fromString("System")),
+                                            names.fromString("out")
+                                    );
+
+                                    JCTree.JCLiteral helloWorld = treeMaker.Literal("Hello World");
+
+// System.out.print("Hello World") 메소드 호출 생성
+                                    JCTree.JCExpression printMethod = treeMaker.Select(
+                                            systemOut,
+                                            names.fromString("print")
+                                    );
+
+                                    JCTree.JCMethodInvocation printInvocation = treeMaker.Apply(
+                                            List.nil(),
+                                            printMethod,
+                                            List.of(helloWorld)
+                                    );
+                                    JCTree.JCExpressionStatement printStatement = treeMaker.Exec(printInvocation);
+
+//                                    JCTree.JCMethodInvocation apply = treeMaker.Apply(List.nil(),
+//                                            treeMaker.Ident(names.fromString("System.out.println")),
+//                                            List.of(treeMaker.Literal("Hello, world!")));
+
+//                                    JCTree.JCBlock block = treeMaker.Block(1, List.of(treeMaker.((treeMaker.Ident(var.getName())))));
+
+                                    member2.body.stats = member2.body.getStatements().append(printStatement);
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            return trees;
+        }
+    };
+
     public List<JCTree.JCMethodDecl> createGetter(JCTree.JCVariableDecl var) {
         // 필드 이름 변수에 앞문자 대문자로 변경 해주기
         String str = var.name.toString();
         String upperVar = str.substring(0, 1).toUpperCase() + str.substring(1, var.name.length());
+
+        JCTree.JCBlock block = treeMaker.Block(1, List.of(treeMaker.Return((treeMaker.Ident(var.getName())))));
 
         return List.of(
                 /**
@@ -133,7 +172,25 @@ public class GetProcessor extends AbstractProcessor {
                         List.nil(),
                         List.nil(),
                         // 식생성 this.a = a;
-                        treeMaker.Block(1, List.of(treeMaker.Return((treeMaker.Ident(var.getName()))))),
+                        block,
                         null));
     }
-}
+
+//        return List.of(
+//                /**
+//                 * treeMaker.Modifiers -> syntax tree node 에 접근하여 수정및 삽입하는 역할
+//                 * @Parm : treeMaker.Modifiers flag 1-> public , 2-> private, 0-> default
+//                 * @Parm : methodName & Type, return 정의
+//                 */
+//                treeMaker.MethodDef(
+//                        treeMaker.Modifiers(1), // public
+//                        names.fromString("get".concat("xx")), // 메서드 명
+//                        (JCTree.JCExpression) methodDecl.getType(), // return type
+//                        List.nil(),
+//                        List.nil(),
+//                        List.nil(),
+//                        // 식생성 this.a = a;
+//                        treeMaker.Block(1, List.of(treeMaker.Return((treeMaker.Ident(methodDecl.getName()))))),
+//                        null));
+    }
+

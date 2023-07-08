@@ -15,7 +15,13 @@ java {
 dependencies {
     implementation 'org.apache.commons:commons-lang3:3.9'
 
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 //    implementation files("/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home/lib/tools.jar")
+}
+
+test {
+    useJUnitPlatform()
 }
 
 compileJava {
